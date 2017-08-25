@@ -57,7 +57,7 @@ public class WaveView extends LinearLayout {
         mSolid.setBlowWavePaint(mWave.getBlowWavePaint());
 
         addView(mWave);
-        addView(mSolid);
+        //addView(mSolid);
 
         setProgress(mProgress);
     }

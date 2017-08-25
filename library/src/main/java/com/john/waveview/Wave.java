@@ -2,11 +2,15 @@ package com.john.waveview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Random;
 
 // y=Asin(ωx+φ)+k
 class Wave extends View {
@@ -53,6 +57,9 @@ class Wave extends View {
     // ω
     private double omega;
 
+
+
+
     public Wave(Context context, AttributeSet attrs) {
         this(context, attrs, R.attr.waveViewStyle);
     }
@@ -89,9 +96,10 @@ class Wave extends View {
         mWaveMultiple = getWaveMultiple(waveMultiple);
         mWaveHeight = getWaveHeight(waveHeight);
         mWaveHz = getWaveHz(waveHz);
-        mBlowOffset = mWaveHeight * 0.4f;
+       // mBlowOffset = mWaveHeight * 0.4f;
+        mBlowOffset = mWaveHeight ;
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                mWaveHeight * 2);
+                mWaveHeight * 5);
         setLayoutParams(params);
     }
 
@@ -131,6 +139,7 @@ class Wave extends View {
         return 0;
     }
 
+
     private float getWaveHz(int size) {
         switch (size) {
             case WaveView.LARGE:
@@ -156,14 +165,14 @@ class Wave extends View {
         mAboveWavePath.moveTo(left, bottom);
         for (float x = 0; x <= mMaxRight; x += X_SPACE) {
             y = (float) (mWaveHeight * Math.sin(omega * x + mAboveOffset) + mWaveHeight);
-            mAboveWavePath.lineTo(x, y);
+            mAboveWavePath.lineTo(x, y*2);
         }
         mAboveWavePath.lineTo(right, bottom);
 
         mBlowWavePath.moveTo(left, bottom);
         for (float x = 0; x <= mMaxRight; x += X_SPACE) {
             y = (float) (mWaveHeight * Math.sin(omega * x + mBlowOffset) + mWaveHeight);
-            mBlowWavePath.lineTo(x, y);
+            mBlowWavePath.lineTo(x, y*3);
         }
         mBlowWavePath.lineTo(right, bottom);
     }
@@ -173,6 +182,7 @@ class Wave extends View {
         super.onWindowVisibilityChanged(visibility);
         if (View.GONE == visibility) {
             removeCallbacks(mRefreshProgressRunnable);
+
         } else {
             removeCallbacks(mRefreshProgressRunnable);
             mRefreshProgressRunnable = new RefreshProgressRunnable();
@@ -216,13 +226,24 @@ class Wave extends View {
     }
 
     private void getWaveOffset() {
-        if (mBlowOffset > Float.MAX_VALUE - 100) {
+        /*if (mBlowOffset > Float.MAX_VALUE - 100) {
             mBlowOffset = 0;
         } else {
             mBlowOffset += mWaveHz;
         }
 
         if (mAboveOffset > Float.MAX_VALUE - 100) {
+            mAboveOffset = 0;
+        } else {
+            mAboveOffset += mWaveHz;
+        }*/
+        if (mBlowOffset > Float.MAX_VALUE ) {
+            mBlowOffset = 0;
+        } else {
+            mBlowOffset += mWaveHz;
+        }
+
+        if (mAboveOffset > Float.MAX_VALUE ) {
             mAboveOffset = 0;
         } else {
             mAboveOffset += mWaveHz;
